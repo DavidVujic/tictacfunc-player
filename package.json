@@ -1,0 +1,23 @@
+{
+  "name": "tictacfunc-player",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidVujic/tictacfunc-player.git"
+  },
+  "author": "David Vujic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavidVujic/tictacfunc-player/issues"
+  },
+  "homepage": "https://github.com/DavidVujic/tictacfunc-player#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^3.1.1"
+  }
+}
