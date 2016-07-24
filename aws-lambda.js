@@ -61,7 +61,7 @@ function run(event) {
 }
 
 exports.handler = (event, context, callback) => {
-    var result = JSON.stringify(run(event)) || '';
+    var result = run(event) || '';
 
     callback(null, result);
 };
