@@ -52,12 +52,25 @@ function parseGame(event) {
     return game;
 }
 
+function parseCallbackName(event) {
+    if (!event || !event.params || !event.params.querystring) {
+        return;
+    }
+
+    return event.params.querystring.callback;
+}
+
+function toJSONP(cell, callbackName) {
+    return callbackName + '(' + cell + ')';
+}
+
 function run(event) {
     var game = parseGame(event);
+    var callbackName = parseCallbackName(event);
 
     var cell = play(game.grid, game.val);
 
-    return cell;
+    return toJSONP(cell, callbackName);
 }
 
 exports.handler = (event, context, callback) => {
