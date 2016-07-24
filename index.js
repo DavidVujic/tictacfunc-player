@@ -1,5 +1,3 @@
-var val = 'X';
-
 function findEmptySlots(grid) {
     var cells = [];
     grid.forEach(function (row) {
@@ -17,7 +15,7 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function play(grid) {
+function play(grid, val) {
     var emptySlots = findEmptySlots(grid);
 
     if (emptySlots.length === 0) {
@@ -33,26 +31,31 @@ function play(grid) {
     return cell;
 }
 
-function parseGrid(jsonData) {
+function parseGame(event) {
+    var game;
     var grid;
 
-    if (!jsonData.grid) {
+    if (!event || !event.params || !event.params.querystring) {
         return [];
     }
 
-    grid = jsonData.grid;
-
-    if (!grid.forEach) {
+    if (!event.params.querystring.game) {
         return [];
     }
 
-    return grid;
+    game = JSON.parse(decodeURIComponent(event.params.querystring.game));
+
+    if (!game) {
+        return [];
+    }
+
+    return game;
 }
 
-function run(jsonData) {
-    var grid = parseGrid(jsonData);
+function run(event) {
+    var game = parseGame(event);
 
-    var cell = play(grid);
+    var cell = play(game.grid, game.val);
 
     return cell;
 }
@@ -60,5 +63,5 @@ function run(jsonData) {
 exports.handler = (event, context, callback) => {
     var result = JSON.stringify(run(event)) || '';
 
-    callback(null, result);
+    callback(null, JSON.stringify(result));
 };
