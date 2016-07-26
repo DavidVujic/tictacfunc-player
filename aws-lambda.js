@@ -11,7 +11,7 @@ function findEmptySlots(grid) {
     return cells;
 }
 
-function getRandomIntInclusive(min, max) {
+function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -22,7 +22,7 @@ function play(grid, val) {
         return;
     }
 
-    var slotIndex = getRandomIntInclusive(0, emptySlots.length - 1);
+    var slotIndex = getRandom(0, emptySlots.length - 1);
 
     var cell = emptySlots[slotIndex];
 
@@ -33,47 +33,23 @@ function play(grid, val) {
 
 function parseGame(event) {
     var game;
-    var grid;
 
-    if (!event || !event.params || !event.params.querystring) {
-        return [];
-    }
-
-    if (!event.params.querystring.game) {
+    if (!event || !event.params || !event.params.querystring || !event.params.querystring.game) {
         return [];
     }
 
     game = JSON.parse(decodeURIComponent(event.params.querystring.game));
 
-    if (!game) {
-        return [];
-    }
-
-    return game;
-}
-
-function parseCallbackName(event) {
-    if (!event || !event.params || !event.params.querystring) {
-        return;
-    }
-
-    return event.params.querystring.callback;
-}
-
-function toJSONP(cell, callbackName) {
-    return callbackName + '(' + cell + ')';
+    return game || [];
 }
 
 function run(event) {
     var game = parseGame(event);
-    var callbackName = parseCallbackName(event);
 
-    var cell = play(game.grid, game.val);
-
-    return toJSONP(cell, callbackName);
+    return play(game.grid, game.val);
 }
 
-exports.handler = (event, context, callback) => {
+exports.handler = function (event, context, callback) {
     var result = run(event) || '';
 
     callback(null, result);
