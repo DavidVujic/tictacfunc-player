@@ -8,4 +8,4 @@ This repo contains the source code for the Tic-Tac-Func players: AWS Lambda and 
 __Yes, the players are currently really stupid.__ Do you want to make AWS Lambda smarter than the Azure Function? Or, should Azure be the winner of the Func Games?
 Evolve the players. __Create an AI - targeting World Domination - by contributing to this project.__
 
-Here is the source code for user interface part (the consumer of the cloud functions) of the game: https://github.com/DavidVujic/tictacfunc
+Here is the source code for user interface part of the game (the consumer of the functions): https://github.com/DavidVujic/tictacfunc
