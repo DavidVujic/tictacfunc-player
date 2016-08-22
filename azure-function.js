@@ -15,20 +15,83 @@ function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function play(grid, val) {
-    var emptySlots = findEmptySlots(grid);
+// Parses grid into a 9 character string
+function parseGrid(grid) {
+    var str = '';
+    for (var row = 0; row < grid.length; row++) {
+        for (var col = 0; col < grid[row].length; col++) {
+            str = str + (grid[row][col].state ? grid[row][col].state.toLowerCase() : '-')
+        }
+    }
+    return str;
+}
 
-    if (emptySlots.length === 0) {
+// Returns string for winner, or null if no winner
+function getWinner(grid) {
+    var rgx = /^(?:(?:.{3}){0,3}([xo])\1{2}.*|.{0,2}([xo]).{2}\2.{2}\2.{0,2}|([xo]).{3}\3.{3}\3|.{2}([xo]).\4.\4.{2})$/i;
+    var results = parseGrid(grid).match(rgx);
+    if (!results)
+        return null;
+    else
+        return results[1] || results[2] || results[3] || results[4];
+}
+
+//Mimimax algorithm to determine best move (recursive...)
+function mm(player, turn, grid, depth) {
+    // 1. Check for winner
+    var results = getWinner(grid);
+    if (results) { // If winner, return score (positive good, negative bad)
+        return results === player ? 10 - depth : depth - 10;
+    } else if (depth >= 9) { // If tie, return 0
+        return 0;
+    }
+
+    // 2. If game isn't over, evaluate each available move
+    var cells = findEmptySlots(grid);
+    var max = null;
+
+    for (var i = 0; i < cells.length; i++) {
+        var newGrid = JSON.parse(JSON.stringify(grid));
+        newGrid[cells[i].y][cells[i].x].state = turn;
+        var score = mm(player, turn === 'x' ? 'o' : 'x', newGrid, depth + 1);
+        if (max === null || score > max) { //if the score is better, update max
+            max = score;
+        } else if(max === score && Math.random() > .5) { //if the score is the same, randomly choose one of them
+            max = score;
+        }
+    }
+
+    // 3. Return the best score
+    return max;
+}
+
+function play(grid, val) {
+    // 1. Grab empty cells
+    var cells = findEmptySlots(grid);
+
+    if (cells.length === 0) {
         return;
     }
 
-    var slotIndex = getRandom(0, emptySlots.length - 1);
+    var curr_depth = 10 - parseGrid(grid).split('-').length;
 
-    var cell = emptySlots[slotIndex];
+    // 2. Run each available move through Minimax algorithm
+    var max = null; var best = null;
+    for (var i = 0; i < cells.length; i++) {
+        var newGrid = JSON.parse(JSON.stringify(grid));
+        newGrid[cells[i].y][cells[i].x].state = val.toLowerCase();
+        var score = mm(val.toLowerCase(), val.toLowerCase(), newGrid, curr_depth);
+        if (max === null || score > max) {
+            max = score; best = cells[i];
+        } else if(max === score && Math.random() > .5) {
+            max = score; best = cells[i];
+        }
+        console.log('score: ' + score + ' - best: ' + JSON.stringify(cells[i]));
+    }
 
-    cell.state = val;
-
-    return cell;
+    // 3. return the best cell
+    best.state = val;
+    return best;
 }
 
 function parseGame(req) {
