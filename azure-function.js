@@ -11,10 +11,6 @@ function findEmptySlots(grid) {
     return cells;
 }
 
-function getRandom(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // Parses grid into a 9 character string
 function parseGrid(grid) {
     var str = '';
@@ -86,7 +82,7 @@ function play(grid, val) {
         } else if(max === score && Math.random() > .5) {
             max = score; best = cells[i];
         }
-        console.log('score: ' + score + ' - best: ' + JSON.stringify(cells[i]));
+        // console.log('score: ' + score + ' - best: ' + JSON.stringify(cells[i]));
     }
 
     // 3. return the best cell
