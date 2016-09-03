@@ -112,11 +112,22 @@ function run(req) {
     return play(game.grid, game.val);
 }
 
+function toJsonp(req, result) {
+    if (!req.query || !req.query.callback) {
+        return;
+    }
+
+    const funcName = req.query.callback;
+    const move = JSON.stringify(result);
+
+    return `typeof ${funcName} === 'function' && ${funcName}(${move});`;
+}
+
 module.exports = function (context, req) {
     context.log('Node.js HTTP trigger function processed a request. RequestUri=%s', req.originalUrl);
 
     var result = run(req);
 
-    context.res = result;
+    context.res = toJsonp(req, result);
     context.done();
 };

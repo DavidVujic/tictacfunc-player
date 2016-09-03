@@ -52,5 +52,5 @@ function run(event) {
 exports.handler = function (event, context, callback) {
     var result = run(event) || '';
 
-    callback(null, result);
+    callback(null, JSON.stringify({"move":result, "callback": event.params.querystring.callback}));
 };

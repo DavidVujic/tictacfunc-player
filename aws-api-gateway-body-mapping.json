@@ -1,0 +1,5 @@
+#set ($dataObj = $util.parseJson($input.path('$')))
+#set ($moveX = $dataObj.move.x)
+#set ($moveY = $dataObj.move.y)
+#set ($moveState = $dataObj.move.state)
+typeof $dataObj.callback === 'function' && $dataObj.callback ({'x': $moveX, 'y': $moveY, 'state': '$moveState'});
