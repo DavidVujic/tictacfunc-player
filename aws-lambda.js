@@ -1,7 +1,7 @@
 function findEmptySlots(grid) {
     var cells = [];
-    grid.forEach(function (row) {
-        row.forEach(function (cell) {
+    grid.forEach(function(row) {
+        row.forEach(function(cell) {
             if (!cell.state) {
                 cells.push(cell);
             }
@@ -34,7 +34,7 @@ function play(grid, val) {
 function parseGame(event) {
     var game;
 
-    if (!event || !event.params || !event.params.querystring || !event.params.querystring.game) {
+    if (!event.params.querystring.game) {
         return [];
     }
 
@@ -49,8 +49,11 @@ function run(event) {
     return play(game.grid, game.val);
 }
 
-exports.handler = function (event, context, callback) {
+exports.handler = function(event, context, callback) {
     var result = run(event) || '';
 
-    callback(null, JSON.stringify({"move":result, "callback": event.params.querystring.callback}));
+    callback(null, {
+        "move": result,
+        "callback": event.params.querystring.callback
+    });
 };

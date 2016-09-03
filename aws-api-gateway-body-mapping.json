@@ -1,4 +1,4 @@
-#set ($dataObj = $util.parseJson($input.path('$')))
+#set ($dataObj = $input.path('$'))
 #set ($moveX = $dataObj.move.x)
 #set ($moveY = $dataObj.move.y)
 #set ($moveState = $dataObj.move.state)
