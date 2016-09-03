@@ -93,7 +93,7 @@ function play(grid, val) {
 function parseGame(req) {
     var game;
 
-    if (!req || !req.query || !req.query.game) {
+    if (!req.query.game) {
         return;
     }
 
@@ -113,14 +113,13 @@ function run(req) {
 }
 
 function toJsonp(req, result) {
-    if (!req.query || !req.query.callback) {
+    if (!req.query.callback) {
         return;
     }
 
     const funcName = req.query.callback;
-    const move = JSON.stringify(result);
 
-    return `typeof ${funcName} === 'function' && ${funcName}(${move});`;
+    return `typeof ${funcName} === 'function' && ${funcName}(${JSON.stringify(result)});`;
 }
 
 module.exports = function (context, req) {
