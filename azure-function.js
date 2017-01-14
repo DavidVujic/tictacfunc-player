@@ -127,6 +127,10 @@ module.exports = function (context, req) {
 
     var result = run(req);
 
-    context.res = toJsonp(req, result);
+    context.res = {
+      body: toJsonp(req, result),
+      headers: { 'Content-Type': 'application/javascript'}
+    };
+
     context.done();
 };
